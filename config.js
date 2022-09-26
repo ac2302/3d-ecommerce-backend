@@ -18,7 +18,7 @@ module.exports = {
 		},
 	},
 	auth: {
-		requiresEmailVerification: true,
+		requiresEmailVerification: false,
 		roles: {
 			list: ["user", "admin"],
 			default: "user",
@@ -35,7 +35,7 @@ module.exports = {
 			hashingRounds: 10,
 		},
 		token: {
-			validFor: 1000 * 60 * 60 * 24 * 7, // 1 week
+			validFor: 1000 * 60 * 60 * 24 * 7 * 4, // 4 weeks
 			length: 32,
 		},
 	},

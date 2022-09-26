@@ -21,19 +21,17 @@ router.post("/register", async (req, res) => {
 
 	// missing details
 	if (!user) return res.status(400).json({ msg: "missing user in body" });
-	if (!(user.username && user.password && user.email))
-		return res.status(400).json({ msg: "missing username, password or email" });
+	if (!(user.password && user.email))
+		return res.status(400).json({ msg: "missing password or email" });
 
 	// invalid details
-	if ((await User.find({ username: user.username })).length > 0)
-		return res.status(400).json({ msg: "username is taken" });
 	if ((await User.find({ email: user.email })).length > 0)
 		return res.status(400).json({
 			msg: "this email address is already registered with another account",
 		});
 	if (!validatePassword(user.password))
 		return res.status(400).json({
-			err: `password should be between ${config.auth.password.length.min} and ${config.auth.password.length.max} characters`,
+			msg: `password should be between ${config.auth.password.length.min} and ${config.auth.password.length.max} characters`,
 		});
 
 	try {
@@ -48,16 +46,6 @@ router.post("/register", async (req, res) => {
 	}
 });
 
-// checking if user exists
-router.get("/exists/:username", async (req, res) => {
-	const foundUsers = await User.find({ username: req.params.username });
-	if (foundUsers.length === 0) return res.json({ exists: false });
-	else
-		return res.json({
-			exists: true,
-			id: foundUsers[0]._id,
-		});
-});
 
 // login
 router.post("/login", async (req, res) => {
@@ -65,11 +53,11 @@ router.post("/login", async (req, res) => {
 
 	// missing details
 	if (!user) return res.status(400).json({ msg: "missing user in body" });
-	if (!(user.username && user.password))
-		return res.status(400).json({ msg: "missing username or password" });
+	if (!(user.email && user.password))
+		return res.status(400).json({ msg: "missing email or password" });
 
 	// looking for user
-	const foundUsers = await User.find({ username: user.username });
+	const foundUsers = await User.find({ email: user.email });
 	if (foundUsers.length === 0)
 		return res.status(404).json({ msg: "user not found" });
 	const foundUser = foundUsers[0];
@@ -140,7 +128,7 @@ router.post("/generate-otp", async (req, res) => {
 		newOTP.save();
 
 		// sending otp
-		const emailBody = `Hello ${foundUser.username}
+		const emailBody = `Hello ${foundUser.email}
 		<hr />
 		Your OTP is <em>${otp}</em>
 		<br />
@@ -149,7 +137,9 @@ router.post("/generate-otp", async (req, res) => {
 		await sendMail(foundUser.email, "One Time Password", emailBody);
 		res.json({ msg: `OTP sent to ${foundUser.email}` });
 	} catch (err) {
-		return res.status(500).json({ msg: "error generating and sending OTP" });
+		return res
+			.status(500)
+			.json({ msg: "error generating and sending OTP" });
 	}
 });
 
@@ -174,7 +164,8 @@ router.post("/reset-password", async (req, res) => {
 
 	const user = await User.findById(foundOTP.user);
 
-	if (user.email != email) return res.status(400).json({ msg: "invalid otp" });
+	if (user.email != email)
+		return res.status(400).json({ msg: "invalid otp" });
 
 	const salt = bcrypt.genSaltSync(config.auth.password.hashingRounds);
 	user.password = bcrypt.hashSync(password, salt);
@@ -197,7 +188,8 @@ router.post("/verify", async (req, res) => {
 
 	const user = await User.findById(foundOTP.user);
 
-	if (user.email != email) return res.status(400).json({ msg: "invalid otp" });
+	if (user.email != email)
+		return res.status(400).json({ msg: "invalid otp" });
 
 	user.verified = true;
 

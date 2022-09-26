@@ -29,4 +29,4 @@ app.listen(config.server.port, "0.0.0.0", () => {
 });
 
 // clean DB
-setTimeout(cleanDB, config.db.cleanInterval);
+// setTimeout(cleanDB, config.db.cleanInterval);
