@@ -28,6 +28,10 @@ const sellableItemSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		images: {
+			type: [String],
+			default: [],
+		},
 		sellableType: {
 			type: String,
 			enum: ["model", "shader"],
