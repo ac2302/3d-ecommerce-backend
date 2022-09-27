@@ -21,6 +21,10 @@ const userSchema = mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		ownedItems: {
+			type: [mongoose.Schema.Types.ObjectId],
+			ref: "SellableItem",
+		},
 	},
 	{ timestamps: true }
 );
