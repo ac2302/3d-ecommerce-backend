@@ -1,6 +1,7 @@
 const express = require("express");
 const config = require("./config");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const authMiddleware = require("./middlewares/auth");
 const tokenMiddleware = require("./middlewares/token");
 const cleanDB = require("./utils/cleanDB");
@@ -9,6 +10,7 @@ const app = express();
 
 // middlewares
 app.use(express.json());
+app.use(cors({ exposedHeaders: "token" }));
 
 // custom middlewares
 app.use(authMiddleware);
