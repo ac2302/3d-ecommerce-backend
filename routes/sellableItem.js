@@ -71,4 +71,15 @@ router.post("/buy/:id", authOnlyMiddleware([]), async (req, res) => {
 	}
 });
 
+// get owned items
+router.get("/owned", authOnlyMiddleware([]), async (req, res) => {
+	try {
+		await req.auth.user.populate("ownedItems");
+		res.json(req.auth.user.ownedItems);
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ err });
+	}
+});
+
 module.exports = router;
