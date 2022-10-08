@@ -1,16 +1,26 @@
 const express = require("express");
-const config = require("./config");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const _ = require("lodash");
+const fileUpload = require("express-fileupload");
+const config = require("./config");
 const authMiddleware = require("./middlewares/auth");
 const tokenMiddleware = require("./middlewares/token");
-const cleanDB = require("./utils/cleanDB");
 
 const app = express();
 
 // middlewares
 app.use(express.json());
 app.use(cors({ exposedHeaders: "token" }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan("dev"));
+app.use(
+	fileUpload({
+		createParentPath: true,
+	})
+);
 
 // custom middlewares
 app.use(authMiddleware);
@@ -25,6 +35,7 @@ mongoose.connect(config.db.string, (err) => {
 // routes
 app.use("/auth/", require("./routes/auth"));
 app.use("/user/", require("./routes/user"));
+app.use("/file/", require("./routes/file"));
 
 app.listen(config.server.port, "0.0.0.0", () => {
 	console.log(`server live on port ${config.server.port}`);
