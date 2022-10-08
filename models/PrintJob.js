@@ -19,6 +19,10 @@ const printJobSchema = mongoose.Schema(
 			type: Number,
 			required: true,
 		},
+		quantity: {
+			typpe: Number,
+			required: true,
+		},
 		objectUrl: {
 			type: String,
 			required: true,
