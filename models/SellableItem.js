@@ -28,9 +28,9 @@ const sellableItemSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		images: {
-			type: [String],
-			default: [],
+		image: {
+			type: String,
+			required: true,
 		},
 		sellableType: {
 			type: String,

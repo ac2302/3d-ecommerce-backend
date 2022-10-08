@@ -15,13 +15,13 @@ router.get("/", async (req, res) => {
 
 // route to create sellable item
 router.post("/", authOnlyMiddleware([]), async (req, res) => {
-	const { title, price, description, objectUrl, images, sellableType } =
+	const { title, price, description, objectUrl, image, sellableType } =
 		req.body;
 
 	// dealing with missing fields
-	if (!(title && price && description && objectUrl && sellableType))
+	if (!(title && price && description && objectUrl && image && sellableType))
 		return res.json({
-			msg: "missing title, price, description, objectUrl and sellableType in req body",
+			msg: "missing title, price, description, objectUrl, image or sellableType in req body",
 		});
 
 	try {
@@ -31,7 +31,7 @@ router.post("/", authOnlyMiddleware([]), async (req, res) => {
 			price,
 			description,
 			objectUrl,
-			images,
+			image,
 			sellableType,
 		});
 		res.json(await newSellableItem.save());
