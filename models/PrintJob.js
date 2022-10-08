@@ -31,6 +31,17 @@ const printJobSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		status: {
+			type: String,
+			enum: [
+				"pending",
+				"declined",
+				"confirmed",
+				"printing",
+				"delivering",
+				"delivered",
+			],
+		},
 	},
 	{ timestamps: true }
 );

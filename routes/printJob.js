@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
 	res.json(await PrintJob.find());
 });
 
-// toute to create printJob
+// route to create printJob
 router.post("/", authOnlyMiddleware([]), async (req, res) => {
 	const { title, volume, quantity, objectUrl, address } = req.body;
 
@@ -36,5 +36,33 @@ router.post("/", authOnlyMiddleware([]), async (req, res) => {
 		res.status(500).json({ err });
 	}
 });
+
+// route to get user's printJobs
+router.get("/self", authOnlyMiddleware([]), async (req, res) => {
+	try {
+		res.json(await PrintJob.find({ buyer: req.auth.user }));
+	} catch (err) {
+		res.status(500).json({ err });
+	}
+});
+
+// route to change printJob's status
+router.post(
+	"/change-status/:id",
+	authOnlyMiddleware(["admin"]),
+	async (req, res) => {
+		const { status } = req.body.status;
+		if (!status) return res.status(400).json({ msg: "invalid status" });
+
+		try {
+			const job = await PrintJob.findById(req.params.id);
+			job.status = status;
+
+			return res.json(await job.save());
+		} catch (err) {
+			res.status(500).json({ err });
+		}
+	}
+);
 
 module.exports = router;
