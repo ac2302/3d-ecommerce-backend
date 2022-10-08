@@ -41,6 +41,7 @@ const printJobSchema = mongoose.Schema(
 				"delivering",
 				"delivered",
 			],
+			default: "pending",
 		},
 	},
 	{ timestamps: true }
