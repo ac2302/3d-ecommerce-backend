@@ -143,8 +143,13 @@ router.post("/verify/:id", authOnlyMiddleware([]), async (req, res) => {
 			});
 			await newReciept.save();
 
+			// adding item to buyer profile
 			req.auth.user.ownedItems.push(itemId);
 			await req.auth.user.save();
+
+			// updating item stats
+			foundItem.purchaces++;
+			await foundItem.save();
 
 			return res
 				.status(200)
