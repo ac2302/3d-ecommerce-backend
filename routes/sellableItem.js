@@ -13,6 +13,16 @@ router.get("/", async (req, res) => {
 	}
 });
 
+// route to get sellable item by id
+router.get("/:id", async (req, res) => {
+	try {
+		res.json(await SellableItem.findById(req.params.id));
+	} catch (err) {
+		console.error(err);
+		res.send(500);
+	}
+});
+
 // route to create sellable item
 router.post("/", authOnlyMiddleware([]), async (req, res) => {
 	const { title, price, description, objectUrl, image, sellableType } =
