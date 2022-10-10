@@ -26,6 +26,12 @@ const recieptSchema = mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		paymentId: {
+			type: String,
+		},
+		orderId: {
+			type: String,
+		},
 	},
 	{ timestamps: true }
 );

@@ -8,6 +8,10 @@ module.exports = {
 		string: process.env.DB_STRING,
 		cleanInterval: 1000 * 60 * 5, // 5 min
 	},
+	razorpay: {
+		keyId: process.env.RAZORPAY_KEY_ID,
+		keySecret: process.env.RAZORPAY_KEY_SECRET,
+	},
 	mail: {
 		credentials: {
 			email: process.env.EMAIL,
