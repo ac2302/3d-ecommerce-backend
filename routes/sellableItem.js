@@ -16,6 +16,17 @@ router.get("/", async (req, res) => {
 	}
 });
 
+// get owned items
+router.get("/owned", authOnlyMiddleware([]), async (req, res) => {
+	try {
+		await req.auth.user.populate("ownedItems");
+		res.json(req.auth.user.ownedItems);
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ err });
+	}
+});
+
 // route to get sellable item by id
 router.get("/:id", async (req, res) => {
 	try {
@@ -161,17 +172,6 @@ router.post("/buy/:id", authOnlyMiddleware([]), async (req, res) => {
 			reciept: await newReciept.save(),
 			item: await foundItem.save(),
 		});
-	} catch (err) {
-		console.error(err);
-		res.status(500).json({ err });
-	}
-});
-
-// get owned items
-router.get("/owned", authOnlyMiddleware([]), async (req, res) => {
-	try {
-		await req.auth.user.populate("ownedItems");
-		res.json(req.auth.user.ownedItems);
 	} catch (err) {
 		console.error(err);
 		res.status(500).json({ err });
