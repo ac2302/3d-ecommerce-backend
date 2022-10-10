@@ -27,6 +27,16 @@ router.get("/owned", authOnlyMiddleware([]), async (req, res) => {
 	}
 });
 
+// get items created by user
+router.get("/created", authOnlyMiddleware([]), async (req, res) => {
+	try {
+		res.json(await SellableItem.find({ creator: req.auth.user }));
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ err });
+	}
+});
+
 // route to get sellable item by id
 router.get("/:id", async (req, res) => {
 	try {
@@ -111,7 +121,8 @@ router.post("/verify/:id", authOnlyMiddleware([]), async (req, res) => {
 			return res.status(400).json({ message: "already owned" });
 
 		const foundItem = await SellableItem.findById(itemId);
-		if (!foundItem) return res.status(404).json({ message: "item not found" });
+		if (!foundItem)
+			return res.status(404).json({ message: "item not found" });
 
 		const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
 			req.body;
