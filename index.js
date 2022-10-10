@@ -38,6 +38,7 @@ app.use("/user/", require("./routes/user"));
 app.use("/file/", require("./routes/file"));
 app.use("/sellableitem/", require("./routes/sellableItem"));
 app.use("/printjob/", require("./routes/printJob"));
+app.use("/payout/", require("./routes/payout"));
 
 app.listen(config.server.port, "0.0.0.0", () => {
 	console.log(`server live on port ${config.server.port}`);
